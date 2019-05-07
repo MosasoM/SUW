@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import cv2
+print(cv2.__version__)
 width_of_img = 860
 height_of_img = 680
 fps = 30
@@ -35,12 +36,13 @@ while(True):
     #動いているエリアの面積を計算してちょうどいい検知結果を抽出する
     thresh = cv2.threshold(mdframe, 3, 255, cv2.THRESH_BINARY)[1] #動いている部分の2値化処理
     im_mask = cv2.medianBlur(thresh,5) #ごま塩ノイズの除去
-    image, contours, hierarchy = cv2.findContours(im_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) #輪郭を検出 
+    #image, contours, hierarchy = cv2.findContours(im_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) #輪郭を検出
+    contours, hierarchy = cv2.findContours(im_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     max_area = 0
     target = None
     for cnt in contours:
         area = cv2.contourArea(cnt)
-        if max_area < area and area < 40000 and area > 4000:
+        if max_area < area and area < 40000 and area > 200:
             max_area = area
             target = cnt
    
@@ -60,7 +62,7 @@ while(True):
         track = False
         if detected_frame is not None:
             # インスタンスを作り直さなきゃいけないっぽい
-            tracker = cv2.TrackerKCF_create()
+            tracker = cv2.TrackerKCF.create()
             ok = tracker.init(detected_frame, bbox)
             detected_frame = None
 

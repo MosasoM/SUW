@@ -39,7 +39,8 @@ def main():
         # フレーム間差分を計算
         mask = frame_sub(frame1, frame2, frame3, th=30)
 
-        image, contours, hierarchy = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) #輪郭を検出 
+        #image, contours, hierarchy = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) #輪郭を検出
+        contours, hierarchy = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # 輪郭を検出
         max_area = 0
         target = None
         for cnt in contours:
