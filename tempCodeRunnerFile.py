@@ -1,0 +1,1 @@
+areaframe = cv2.circle(frame,(cx,cy), 0.1, (0,0,255), -1)
