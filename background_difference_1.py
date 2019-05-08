@@ -77,15 +77,16 @@ while(True):
                     ok = tracker.init(detected_frame, bbox)
                     detected_frame = None
 
-                if ok:
-                    track, bbox = tracker.update(frame)
+                # if ok:
+                #     track, bbox = tracker.update(frame)
+                track, bbox = tracker.update(frame)
                 if track:
                     p1 = (int(bbox[0]), int(bbox[1]))
                     p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
                     cv2.rectangle(frame, p1, p2, (0,255,0), 2, 1)
                     
-                else:
-                    ok = False
+                # else:
+                #     ok = False
             
         else:
             #areaframe = cv2.drawContours(frame, [target], 0, (0,255,0), 3)
