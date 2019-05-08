@@ -4,6 +4,12 @@
 import cv2
 print(cv2.__version__)
 
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import cv2
+print(cv2.__version__)
+
 cap = cv2.VideoCapture(0)
 ok = False
 detected_frame = None
