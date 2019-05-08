@@ -2,11 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-import numpy as np
-
+print(cv2.__version__)
 
 cap = cv2.VideoCapture(0)
-before = None
 ok = False
 detected_frame = None
 bbox = (0,0,0,0)
