@@ -5,7 +5,10 @@ import get
 
 color = (0,0,255)
 
-img = np.zeros((512,512,4), np.uint8)
+
+img = cv2.imread("sea.jpg",cv2.IMREAD_UNCHANGED)
+zero = np.zeros((img.shape[0],img.shape[1]),img.dtype)
+img = cv2.merge((img,zero))
 fish = cv2.imread("18438.png",cv2.IMREAD_UNCHANGED)
 fish_scale_inv = 4
 orgHeight = fish.shape[0]
