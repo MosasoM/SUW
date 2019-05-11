@@ -8,8 +8,7 @@ cap = cv2.VideoCapture(0)
 ok = False
 detected_frame = None
 bbox = (0,0,0,0)
-bboxes = []
-trackers = []
+center =(0,0)
 
 avg = others.init_avg(cap)
 
@@ -29,8 +28,9 @@ while (True):
             bbox = (x, y, w, h)
             bboxes.append(bbox)
             detected_frame = frame.copy()
+            center = (int(x + w / 2.0), int(y + h / 2.0))
             frame = cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            frame = cv2.circle(frame, (int(x + w / 2.0), int(y + h / 2.0)), 4, (0, 0, 255))
+            frame = cv2.circle(frame, center , 4, (0, 0, 255))
 
     cv2.imshow('MotionDetected Area Frame', frame)
 
