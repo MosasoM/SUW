@@ -21,33 +21,8 @@ while (True):
     contours,hierarchy = detect_move.detect(gray,avg)
     i = 0
     for cnt in contours:
-        if i > 5:
-            break
         area = cv2.contourArea(cnt)
-        i = i + 1
-        if area <= 300:
-            if detected_frame is not None:
-                areaframe = frame
-                cv2.putText(areaframe, 'trackers_init', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3, cv2.LINE_AA)
-                trackers = []
-                for i in range(len(bboxes)):
-                    trackers.append(cv2.TrackerKCF_create())
-                    trackers[i].init(detected_frame, bboxes[i])
-                detected_frame = None
-            for i in range(len(bboxes)):
-                cv2.putText(areaframe, 'tracking', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3, cv2.LINE_AA)
-                track = False
-                # if ok:
-                #     track, bbox = trackers[i].update(frame)
-                track, bbox = trackers[i].update(frame)
-                if track:
-                    p1 = (int(bbox[0]), int(bbox[1]))
-                    p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
-                    cv2.rectangle(frame, p1, p2, (0, 255, 0), 2, 1)
-                #
-                # else:
-                #     ok = False
-        else:
+        if area >= 1000:
             areaframe = frame
             cv2.putText(areaframe, 'motion', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3, cv2.LINE_AA)
             x, y, w, h = cv2.boundingRect(cnt)
