@@ -21,7 +21,7 @@ while (True):
     i = 0
     for cnt in contours:
         area = cv2.contourArea(cnt)
-        if area >= 1000:
+        if area >= 1500:
             areaframe = frame
             cv2.putText(areaframe, 'motion', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3, cv2.LINE_AA)
             x, y, w, h = cv2.boundingRect(cnt)
@@ -30,7 +30,7 @@ while (True):
             detected_frame = frame.copy()
             center = (int(x + w / 2.0), int(y + h / 2.0))
             frame = cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            frame = cv2.circle(frame, center , 4, (0, 0, 255))
+            frame = cv2.circle(frame, center , 4, (0, 0, 255),-1)
 
     cv2.imshow('MotionDetected Area Frame', frame)
 
