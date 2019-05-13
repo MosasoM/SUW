@@ -4,7 +4,7 @@ import get
 import change_direction as cd
 
 color = (0,0,255)
-r = 20
+r = 100
 people =np.array([0,0])
 
 
@@ -42,45 +42,37 @@ def move_fish(img,fish,fish_lb):
     return out
 
 while(True):
-    # out = img.copy()
-    # left = int(fish_lb[0])
-    # right = left+fish.shape[0]
-    # bottom = int(fish_lb[1])
-    # top = bottom+fish.shape[1]
-    # center = (int((left+right)/2.0),int((bottom+top)/2.0))
-    #
-    # roi = img[left:right,bottom:top]
-    #
-    # mask = fish[:,:,3]
-    # ret, mask_inv = cv2.threshold(mask,50, 255, cv2.THRESH_BINARY_INV)
-    # img2_fg = cv2.bitwise_and(fish, fish, mask=mask)
-    # img1_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
-    # diff = cv2.add(img1_bg,img2_fg)
-    # out[left:right,bottom:top] = diff
     out = move_fish(img,fish,fish_lb)
-    #cv2.circle(out,center,2,color)
     cv2.circle(out,(int(fish_lb[1]),int(fish_lb[0])),2,color) #魚の位置
 
     i = i +1
-    if i > 300:
+    if i > 3000:
         break
-    print(np.linalg.norm(np.array(fish_lb) - np.array(people)))
+    #print(np.linalg.norm(np.array(fish_lb) - np.array(people)))
 
     people = people  + np.array([1,1])
     cv2.circle(out,(int(people[0]),int(people[1])),2,color) #人の位置
-
-    direction = cd.change_direction(np.array(fish_lb), np.array(people))
-    fish_lb = fish_lb + direction 
-    cd.change_direction(np.array(fish_lb), np.array(people))
-    print(fish_lb)
-
     
+    # direction = cd.change_direction(np.array(fish_lb), np.array(people))
+
+    # fish_lb = fish_lb + direction 
+    #cd.change_direction(np.array(fish_lb), np.array(people))
+    #print(fish_lb)
+    
+    if fish_lb[0] > 700 or fish_lb[0] < 30 or fish_lb[1] > 500 or fish_lb[1] < 60 :
+        direction = - cd.change_direction(np.array(fish_lb), np.array(people))
+        fish_lb = fish_lb + direction 
+    
+    else:
+        direction = cd.change_direction(np.array(fish_lb), np.array(people))
+        fish_lb = fish_lb + direction 
+
     
     if flag:    
         cv2.putText(out, 'GET!!', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3, cv2.LINE_AA)
     cv2.imshow("test", out)
 
-    flag1 = get.get(fish_lb,fish)
+    #flag1 = get.get(fish_lb,fish)
 
     k = cv2.waitKey(1)
 
