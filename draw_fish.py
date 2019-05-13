@@ -45,9 +45,6 @@ while(True):
     out = move_fish(img,fish,fish_lb)
     cv2.circle(out,(int(fish_lb[1]),int(fish_lb[0])),2,color) #魚の位置
 
-    i = i +1
-    if i > 3000:
-        break
     #print(np.linalg.norm(np.array(fish_lb) - np.array(people)))
 
     people = people  + np.array([1,1])
