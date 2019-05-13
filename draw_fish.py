@@ -19,28 +19,45 @@ resized = (orgWidth//fish_scale_inv, orgHeight//fish_scale_inv)
 fish = cv2.resize(fish,resized)
 mask = fish[:,:,3]
 fish_lb = [100,100]
-cv2.imshow("test",fish)
-
 flag = False
 flag1 = False
 
 i=0
-while(True):
+
+def move_fish(img,fish,fish_lb):
     out = img.copy()
     left = int(fish_lb[0])
-    right = left+fish.shape[0]
+    right = left + fish.shape[0]
     bottom = int(fish_lb[1])
-    top = bottom+fish.shape[1]
-    center = (int((left+right)/2.0),int((bottom+top)/2.0))
-    
-    roi = img[left:right,bottom:top]
-    
-    mask = fish[:,:,3]
-    ret, mask_inv = cv2.threshold(mask,50, 255, cv2.THRESH_BINARY_INV)
+    top = bottom + fish.shape[1]
+
+    roi = img[left:right, bottom:top]
+
+    mask = fish[:, :, 3]
+    ret, mask_inv = cv2.threshold(mask, 50, 255, cv2.THRESH_BINARY_INV)
     img2_fg = cv2.bitwise_and(fish, fish, mask=mask)
     img1_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
-    diff = cv2.add(img1_bg,img2_fg)
-    out[left:right,bottom:top] = diff
+    diff = cv2.add(img1_bg, img2_fg)
+    out[left:right, bottom:top] = diff
+    return out
+
+while(True):
+    # out = img.copy()
+    # left = int(fish_lb[0])
+    # right = left+fish.shape[0]
+    # bottom = int(fish_lb[1])
+    # top = bottom+fish.shape[1]
+    # center = (int((left+right)/2.0),int((bottom+top)/2.0))
+    #
+    # roi = img[left:right,bottom:top]
+    #
+    # mask = fish[:,:,3]
+    # ret, mask_inv = cv2.threshold(mask,50, 255, cv2.THRESH_BINARY_INV)
+    # img2_fg = cv2.bitwise_and(fish, fish, mask=mask)
+    # img1_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
+    # diff = cv2.add(img1_bg,img2_fg)
+    # out[left:right,bottom:top] = diff
+    out = move_fish(img,fish,fish_lb)
     #cv2.circle(out,center,2,color)
     cv2.circle(out,(int(fish_lb[1]),int(fish_lb[0])),2,color) #魚の位置
 

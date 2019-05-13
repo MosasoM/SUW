@@ -1,6 +1,7 @@
 import cv2
 import others
 import detect_move
+import numpy as np
 
 print(cv2.__version__)
 
@@ -11,6 +12,27 @@ bbox = (0,0,0,0)
 center =(0,0)
 
 avg = others.init_avg(cap)
+
+
+
+color = (0,0,255)
+r = 20
+people =np.array([0,0])
+
+
+img = cv2.imread("sea.jpg",cv2.IMREAD_UNCHANGED)
+zero = np.zeros((img.shape[0],img.shape[1]),img.dtype)
+img = cv2.merge((img,zero))
+fish = cv2.imread("18438.png",cv2.IMREAD_UNCHANGED)
+fish_scale_inv = 4
+orgHeight = fish.shape[0]
+orgWidth = fish.shape[1]
+resized = (orgWidth//fish_scale_inv, orgHeight//fish_scale_inv)
+fish = cv2.resize(fish,resized)
+mask = fish[:,:,3]
+fish_lb = [100,100]
+flag = False
+flag1 = False
 
 while (True):
     bboxes = []
