@@ -6,7 +6,7 @@ import math
 fish = np.array([40,40])
 people =np.array([0,0])
 
-r = 1000000000
+r = 10000
 
 direction = np.array([1,1])
 angle = 0
@@ -38,8 +38,8 @@ def change_direction_multi(fish,people):
         return new_direction
     else:
         angle = angle + 20 * (random.randrange(7) - 3)
-        #return np.array([2.0 * math.cos(angle * 3.14 / 180), 2.0 * math.sin(angle * 3.14 / 180)])
-        return np.array([0,0])
+        return np.array([2.0 * math.cos(angle * 3.14 / 180), 2.0 * math.sin(angle * 3.14 / 180)])
+        #return np.array([0,0])
 
 
     

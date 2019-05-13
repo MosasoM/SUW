@@ -7,24 +7,16 @@ import change_direction as cd
 
 
 print(cv2.__version__)
-f = open("debug.txt","w")
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FPS, 60) 
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 600) 
-print(cap.get(cv2.CAP_PROP_FPS))
-print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-
 
 ok = False
 detected_frame = None
 bbox = (0,0,0,0)
 center =(0,0)
-
 avg = others.init_avg(cap)
-
-
 color = (0,0,255)
 
 
@@ -36,7 +28,6 @@ fish_scale_inv = 4
 orgHeight = fish.shape[0]
 orgWidth = fish.shape[1]
 resized = (orgWidth//fish_scale_inv, orgHeight//fish_scale_inv)
-print(resized)
 fish = cv2.resize(fish,resized)
 mask = fish[:,:,3]
 fish_lb = [200,300]
@@ -68,7 +59,7 @@ while (True):
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     contours,hierarchy = detect_move.detect(gray,avg)
-    cv2.imshow('frame',frame)
+    
     out = move_fish(img,fish,[100,100])
     out = move_fish(img,fish,fish_lb)
     fish_center = fish_lb +np.array([resized[1],resized[0]-30])/2
@@ -87,7 +78,7 @@ while (True):
             out = cv2.circle(out, center , 4, (0, 0, 255),-1)
 
     
-    cv2.circle(out,(int(fish_center[1]),int(fish_center[0])),2,color) #魚の位置
+    #cv2.circle(out,(int(fish_center[1]),int(fish_center[0])),2,color) #魚の位置
 
 
     
@@ -114,15 +105,6 @@ while (True):
         fish_lb = fish_lb + direction 
 
     
-    # f.write(str(direction[0]))
-    # f.write(str(direction[1]))
-    # f.write(str("\n"))
-
-    f.write(str(fish_lb[0])+" ")
-    f.write(str(fish_lb[1]))
-    f.write(str("\n"))
-
-    
     if flag:    
         cv2.putText(out, 'GET!!', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3, cv2.LINE_AA)
    
@@ -132,6 +114,7 @@ while (True):
         color = (255,100,0)
         flag = True
 
+    cv2.imshow('frame',frame)
     cv2.imshow('MotionDetected Area Frame', out)
 
     # キー入力を1ms待って、kが27(ESC)だったらBreakする
