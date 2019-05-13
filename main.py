@@ -2,10 +2,21 @@ import cv2
 import others
 import detect_move
 import numpy as np
+import get
+import change_direction as cd
+
 
 print(cv2.__version__)
-
+f = open("debug.txt","w")
 cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_FPS, 60) 
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 600) 
+print(cap.get(cv2.CAP_PROP_FPS))
+print(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+print(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+
 ok = False
 detected_frame = None
 bbox = (0,0,0,0)
@@ -14,10 +25,7 @@ center =(0,0)
 avg = others.init_avg(cap)
 
 
-
 color = (0,0,255)
-r = 20
-people =np.array([0,0])
 
 
 img = cv2.imread("sea.jpg",cv2.IMREAD_UNCHANGED)
@@ -28,19 +36,42 @@ fish_scale_inv = 4
 orgHeight = fish.shape[0]
 orgWidth = fish.shape[1]
 resized = (orgWidth//fish_scale_inv, orgHeight//fish_scale_inv)
+print(resized)
 fish = cv2.resize(fish,resized)
 mask = fish[:,:,3]
-fish_lb = [100,100]
+fish_lb = [200,300]
 flag = False
 flag1 = False
 
+def move_fish(img,fish,fish_lb):
+    out = img.copy()
+    left = int(fish_lb[0])
+    right = left + fish.shape[0]
+    bottom = int(fish_lb[1])
+    top = bottom + fish.shape[1]
+
+    roi = img[left:right, bottom:top]
+
+    mask = fish[:, :, 3]
+    ret, mask_inv = cv2.threshold(mask, 50, 255, cv2.THRESH_BINARY_INV)
+    img2_fg = cv2.bitwise_and(fish, fish, mask=mask)
+    img1_bg = cv2.bitwise_and(roi, roi, mask=mask_inv)
+    diff = cv2.add(img1_bg, img2_fg)
+    out[left:right, bottom:top] = diff
+    return out
+
 while (True):
     bboxes = []
+    people =[]
     ret, frame = cap.read()
-    frame = cv2.resize(frame, (int(frame.shape[1] / 2), int(frame.shape[0] / 2)))
+    frame = cv2.flip(frame,1)
+
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     contours,hierarchy = detect_move.detect(gray,avg)
-    i = 0
+    cv2.imshow('frame',frame)
+    out = move_fish(img,fish,[100,100])
+    out = move_fish(img,fish,fish_lb)
+    fish_center = fish_lb +np.array([resized[1],resized[0]-30])/2
     for cnt in contours:
         area = cv2.contourArea(cnt)
         if area >= 1500:
@@ -51,10 +82,57 @@ while (True):
             bboxes.append(bbox)
             detected_frame = frame.copy()
             center = (int(x + w / 2.0), int(y + h / 2.0))
-            frame = cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            frame = cv2.circle(frame, center , 4, (0, 0, 255),-1)
+            people.append([center[1],center[0]])
+            out = cv2.rectangle(out, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            out = cv2.circle(out, center , 4, (0, 0, 255),-1)
 
-    cv2.imshow('MotionDetected Area Frame', frame)
+    
+    cv2.circle(out,(int(fish_center[1]),int(fish_center[0])),2,color) #魚の位置
+
+
+    
+    if fish_lb[1] > 800-resized[0]-5 :
+        direction = np.array([0,-10])
+        fish_lb = fish_lb + direction 
+
+    if fish_lb[1] < 10:
+        direction = np.array([0,10])
+        fish_lb = fish_lb + direction  
+
+    
+    if fish_lb[0] > 600-resized[1]-5:
+        direction = np.array([-10,0])
+        fish_lb = fish_lb + direction 
+    
+    if fish_lb[0] < 10:
+        direction = np.array([10,0])
+        fish_lb = fish_lb + direction  
+
+    
+    else:
+        direction = cd.change_direction_multi(np.array(fish_center), people)
+        fish_lb = fish_lb + direction 
+
+    
+    # f.write(str(direction[0]))
+    # f.write(str(direction[1]))
+    # f.write(str("\n"))
+
+    f.write(str(fish_lb[0])+" ")
+    f.write(str(fish_lb[1]))
+    f.write(str("\n"))
+
+    
+    if flag:    
+        cv2.putText(out, 'GET!!', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3, cv2.LINE_AA)
+   
+    flag1 = get.get(fish_center,fish)
+
+    if flag1:
+        color = (255,100,0)
+        flag = True
+
+    cv2.imshow('MotionDetected Area Frame', out)
 
     # キー入力を1ms待って、kが27(ESC)だったらBreakする
     k = cv2.waitKey(1)

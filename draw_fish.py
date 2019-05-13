@@ -71,13 +71,13 @@ while(True):
 
     #flag1 = get.get(fish_lb,fish)
 
-    k = cv2.waitKey(1)
+   
 
     if flag1:
         color = (255,100,0)
         flag = True
 
-
+    k = cv2.waitKey(1)
     if k == 27:
         break
 cv2.destroyAllWindows()
