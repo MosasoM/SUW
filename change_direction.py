@@ -20,7 +20,25 @@ def change_direction(fish,people):
     else:
         angle = angle + 20*(random.randrange(7) - 3)
         print(math.cos(angle * 3.14/180))
-        return np.array([2.0*math.cos(angle * 3.14/180),2.0*math.sin(angle * 3.14 /180)]) 
+        return np.array([2.0*math.cos(angle * 3.14/180),2.0*math.sin(angle * 3.14 /180)])
+
+def change_direction_multi(fish,people):
+    global angle
+    new_direction = [0,0]
+    flag = False
+    for p in people:
+        d = np.linalg.norm(fish - people)
+        if d < r:
+            new_direction+=3*(fish -people) / (np.linalg.norm(fish - people)+1e-9)
+            flag = True
+
+    if flag:
+        return new_direction
+    else:
+        angle = angle + 20 * (random.randrange(7) - 3)
+        print(math.cos(angle * 3.14 / 180))
+        return np.array([2.0 * math.cos(angle * 3.14 / 180), 2.0 * math.sin(angle * 3.14 / 180)])
+
 
     
 
