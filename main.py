@@ -21,7 +21,7 @@ while (True):
     i = 0
     for cnt in contours:
         area = cv2.contourArea(cnt)
-        if area >= 2000:
+        if area >= 1500:
             areaframe = frame
             cv2.putText(areaframe, 'motion', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3, cv2.LINE_AA)
             x, y, w, h = cv2.boundingRect(cnt)
