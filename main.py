@@ -30,7 +30,7 @@ orgWidth = fish.shape[1]
 resized = (orgWidth//fish_scale_inv, orgHeight//fish_scale_inv)
 fish = cv2.resize(fish,resized)
 mask = fish[:,:,3]
-fish_lb = np.random.randint(200,500,2)
+fish_lb = np.array([200,200])  #np.random.randint(200,500,2)
 flag = False
 flag1 = False
 
@@ -55,11 +55,11 @@ while (True):
     bboxes = []
     people =[]
     ret, frame = cap.read()
-    frame = cv2.flip(frame,1)
+    #frame = cv2.flip(frame,1)
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     contours,hierarchy = detect_move.detect(gray,avg)
-    
+    #frame2 = frame.copy()
     out = move_fish(img,fish,[100,100])
     out = move_fish(img,fish,fish_lb)
     fish_center = fish_lb +np.array([resized[1],resized[0]-30])/2
@@ -76,6 +76,8 @@ while (True):
             people.append([center[1],center[0]])
             out = cv2.rectangle(out, (x, y), (x + w, y + h), (0, 255, 0), 2)
             out = cv2.circle(out, center , 4, (0, 0, 255),-1)
+            frame = cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            frame = cv2.circle(frame, center , 4, (0, 0, 255),-1)
 
     
     #cv2.circle(out,(int(fish_center[1]),int(fish_center[0])),2,color) #魚の位置
@@ -112,7 +114,8 @@ while (True):
     if flag1:
         color = (255,100,0)
         flag = True
-
+    
+    cv2.imshow('frame',frame)
     cv2.imshow('Fish hunt', out)
 
     # キー入力を1ms待って、kが27(ESC)だったらBreakする
