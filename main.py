@@ -86,20 +86,18 @@ while (True):
         direction = np.array([0,-10])
         fish_lb = fish_lb + direction 
 
-    if fish_lb[1] < 10:
+    elif fish_lb[1] < 10:
         direction = np.array([0,10])
         fish_lb = fish_lb + direction  
 
     
-    if fish_lb[0] > 600-resized[1]-5:
+    elif fish_lb[0] > 600-resized[1]-5:
         direction = np.array([-10,0])
         fish_lb = fish_lb + direction 
     
-    if fish_lb[0] < 10:
+    elif fish_lb[0] < 10:
         direction = np.array([10,0])
-        fish_lb = fish_lb + direction  
-
-    
+        fish_lb = fish_lb + direction
     else:
         direction = cd.change_direction_multi(np.array(fish_center), people)
         fish_lb = fish_lb + direction 
