@@ -99,8 +99,9 @@ while (True):
         direction = np.array([10,0])
         fish_lb = fish_lb + direction
     else:
-        direction = cd.change_direction_multi(np.array(fish_center), people)
-        fish_lb = fish_lb + direction 
+        if not flag:
+            direction = cd.change_direction_multi(np.array(fish_center), people)
+            fish_lb = fish_lb + direction
 
     
     if flag:    
